@@ -10,24 +10,35 @@ class DateDifferenceCalculator extends StatefulWidget {
 class _DateDifferenceCalculatorState extends State<DateDifferenceCalculator> {
   DateTime? startDate;
   DateTime? endDate;
-  String differenceText = "";
+  String resultText = "";
+  bool isAgeMode = false;
 
-  void calculateDifference() {
-    if (startDate == null || endDate == null) {
+  void calculate() {
+    if (startDate == null) {
       setState(() {
-        differenceText = "Please select both dates!";
+        resultText = "Please select your birth date!";
       });
       return;
     }
 
-    Duration difference = endDate!.difference(startDate!);
+    if (!isAgeMode && endDate == null) {
+      setState(() {
+        resultText = "Please select both dates!";
+      });
+      return;
+    }
+
+    DateTime finalEndDate = isAgeMode ? DateTime.now() : endDate!;
+    Duration difference = finalEndDate.difference(startDate!);
     int days = difference.inDays;
     int years = days ~/ 365;
     int months = (days % 365) ~/ 30;
     int remainingDays = (days % 365) % 30;
 
     setState(() {
-      differenceText = "$years Years, $months Months, $remainingDays Days ";
+      resultText = isAgeMode
+          ? "You are $years Years, $months Months, $remainingDays Days old."
+          : "$years Years, $months Months, $remainingDays Days";
     });
   }
 
@@ -40,8 +51,8 @@ class _DateDifferenceCalculatorState extends State<DateDifferenceCalculator> {
       builder: (context, child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            primaryColor: const Color.fromARGB(255, 112, 64, 255),
-            colorScheme: ColorScheme.light(primary: Colors.purple),
+            primaryColor: Colors.black,
+            colorScheme: ColorScheme.light(primary: Colors.black),
             buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
           child: child!,
@@ -62,13 +73,29 @@ class _DateDifferenceCalculatorState extends State<DateDifferenceCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 236, 228, 252),
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text(" Date Diff Calculator",
-            style: GoogleFonts.mochiyPopOne(fontSize: 22, color: Colors.white)),
-        backgroundColor: const Color.fromARGB(255, 121, 64, 255),
+        title: Text(
+          isAgeMode ? "Age Calculator" : "Date Diff Calculator",
+          style: GoogleFonts.mochiyPopOne(fontSize: 22, color: Colors.white),
+        ),
+        backgroundColor: Colors.black,
         elevation: 6,
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.swap_horiz, color: Colors.white),
+            tooltip: 'Switch Mode',
+            onPressed: () {
+              setState(() {
+                isAgeMode = !isAgeMode;
+                resultText = "";
+                startDate = null;
+                endDate = null;
+              });
+            },
+          )
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -76,14 +103,14 @@ class _DateDifferenceCalculatorState extends State<DateDifferenceCalculator> {
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.purple.shade50, Colors.pink.shade50],
+                colors: [Colors.white, Colors.grey[300] ?? Colors.blueGrey],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.purple.shade100,
+                  color: Colors.grey[400]!,
                   blurRadius: 15,
                   spreadRadius: 5,
                 ),
@@ -93,42 +120,45 @@ class _DateDifferenceCalculatorState extends State<DateDifferenceCalculator> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(" Select Your Dates ",
-                    style: GoogleFonts.mochiyPopOne(
-                      fontSize: 24,
-                      color: Colors.purple[900],
-                    )),
+                Text(
+                  isAgeMode ? "Select Your Birth Date" : "Select Your Dates",
+                  style: GoogleFonts.mochiyPopOne(fontSize: 24, color: Colors.black),
+                ),
                 const SizedBox(height: 30),
 
                 // Date Pickers
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildDateButton("Start Date", startDate, () => selectDate(context, true)),
-                    _buildDateButton("End Date", endDate, () => selectDate(context, false)),
+                    _buildDateButton(isAgeMode ? "Birth Date" : "Start Date", startDate,
+                        () => selectDate(context, true)),
+                    if (!isAgeMode)
+                      _buildDateButton("End Date", endDate, () => selectDate(context, false)),
                   ],
                 ),
 
                 const SizedBox(height: 30),
 
                 ElevatedButton.icon(
-                  onPressed: calculateDifference,
+                  onPressed: calculate,
                   icon: Icon(Icons.calculate, color: Colors.white),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 80, 64, 255),
+                    backgroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  label: Text("Calculate",
-                      style: GoogleFonts.mochiyPopOne(fontSize: 18, color: Colors.white)),
+                  label: Text(
+                    "Calculate",
+                    style: GoogleFonts.mochiyPopOne(fontSize: 18, color: Colors.white),
+                  ),
                 ),
 
                 const SizedBox(height: 40),
 
                 AnimatedOpacity(
-                  opacity: differenceText.isNotEmpty ? 1.0 : 0.0,
+                  opacity: resultText.isNotEmpty ? 1.0 : 0.0,
                   duration: Duration(milliseconds: 300),
                   child: Container(
                     decoration: BoxDecoration(
@@ -136,7 +166,7 @@ class _DateDifferenceCalculatorState extends State<DateDifferenceCalculator> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.pinkAccent.withOpacity(0.4),
+                          color: Colors.grey[400]!.withOpacity(0.4),
                           blurRadius: 20,
                           offset: Offset(0, 10),
                         ),
@@ -144,8 +174,8 @@ class _DateDifferenceCalculatorState extends State<DateDifferenceCalculator> {
                     ),
                     padding: const EdgeInsets.all(20),
                     child: Text(
-                      differenceText,
-                      style: GoogleFonts.fredoka(fontSize: 22, color: Colors.purple[900]),
+                      resultText,
+                      style: GoogleFonts.fredoka(fontSize: 22, color: Colors.black),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -161,7 +191,7 @@ class _DateDifferenceCalculatorState extends State<DateDifferenceCalculator> {
   Widget _buildDateButton(String label, DateTime? date, VoidCallback onPressed) {
     return Column(
       children: [
-        Text(label, style: GoogleFonts.fredoka(fontSize: 16, color: Colors.purple[800])),
+        Text(label, style: GoogleFonts.fredoka(fontSize: 16, color: Colors.grey[800])),
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: onPressed,
@@ -171,12 +201,12 @@ class _DateDifferenceCalculatorState extends State<DateDifferenceCalculator> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
-              side: BorderSide(color: Colors.pinkAccent, width: 2),
+              side: BorderSide(color: Colors.grey[600]!, width: 2),
             ),
           ),
           child: Text(
             date == null ? "Pick Date" : DateFormat("yyyy-MM-dd").format(date),
-            style: GoogleFonts.fredoka(fontSize: 16, color: Colors.pinkAccent),
+            style: GoogleFonts.fredoka(fontSize: 16, color: Colors.grey[600]),
           ),
         ),
       ],

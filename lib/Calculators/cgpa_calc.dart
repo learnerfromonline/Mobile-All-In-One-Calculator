@@ -18,7 +18,7 @@ class _CgpaCalculatorState extends State<CgpaCalculator> {
 
     for (var controller in gpaControllers) {
       double? gpa = double.tryParse(controller.text);
-      if (gpa != null && gpa >= 0.0 && gpa <= 10.0) {
+      if (gpa != null && gpa >= 0.0 && gpa <= 15.0) {
         totalGPA += gpa;
         validSubjects++;
       }
@@ -35,11 +35,11 @@ class _CgpaCalculatorState extends State<CgpaCalculator> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.redAccent,
+          backgroundColor: Colors.grey[900],
           content: Text(
-            "Please enter valid GPA values (0 - 10).",
+            "Please enter valid GPA values (0 - 15).",
             textAlign: TextAlign.center,
-            style: GoogleFonts.karla(color: Colors.white),
+            style: GoogleFonts.fredoka(color: Colors.white),
           ),
         ),
       );
@@ -68,13 +68,16 @@ class _CgpaCalculatorState extends State<CgpaCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightGreen[50],
+      backgroundColor: Color(0xFF121212), // Black background
       appBar: AppBar(
-        title: Text("🎓 CGPA Calculator", style: GoogleFonts.kanit(color: Colors.white, fontSize: 24)),
-        backgroundColor: Colors.teal.shade700,
+        title: Text(
+          "🎓 CGPA Calculator",
+          style: GoogleFonts.fredoka(color: Colors.white, fontSize: 24),
+        ),
+        backgroundColor: Color(0xFF121212),
         centerTitle: true,
         elevation: 6,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.transparent),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -82,13 +85,16 @@ class _CgpaCalculatorState extends State<CgpaCalculator> {
           children: [
             TextField(
               keyboardType: TextInputType.number,
+              style: TextStyle(color: Colors.white), // Fix: user text visible
               decoration: InputDecoration(
                 labelText: "Enter number of semesters",
-                labelStyle: GoogleFonts.rubik(color: Colors.teal[800]),
+                labelStyle: GoogleFonts.fredoka(color: Colors.white),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Color(0xFF1E1E1E), // Dark gray field
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                prefixIcon: Icon(Icons.numbers, color: Colors.teal),
+                prefixIcon: Icon(Icons.numbers, color: Colors.white),
+                hintText: 'e.g., 5',
+                hintStyle: GoogleFonts.fredoka(color: Colors.grey[500]),
               ),
               onChanged: setSubjectCount,
             ),
@@ -101,19 +107,22 @@ class _CgpaCalculatorState extends State<CgpaCalculator> {
                     elevation: 4,
                     margin: const EdgeInsets.symmetric(vertical: 6),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    color: Colors.lightBlue.shade50,
+                    color: Color(0xFF1E1E1E),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: TextField(
                         controller: gpaControllers[index],
                         keyboardType: TextInputType.number,
+                        style: TextStyle(color: Colors.white), // Fix: user text visible
                         decoration: InputDecoration(
                           labelText: "GPA for Semester ${index + 1}",
-                          labelStyle: GoogleFonts.karla(color: Colors.indigo[800]),
+                          labelStyle: GoogleFonts.fredoka(color: Colors.white),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                           filled: true,
-                          fillColor: Colors.white,
-                          prefixIcon: Icon(Icons.school, color: Colors.indigo),
+                          fillColor: Color(0xFF2C2C2C),
+                          prefixIcon: Icon(Icons.school, color: Colors.white),
+                          hintText: 'e.g., 8.5',
+                          hintStyle: GoogleFonts.fredoka(color: Colors.grey[500]),
                         ),
                       ),
                     ),
@@ -125,11 +134,14 @@ class _CgpaCalculatorState extends State<CgpaCalculator> {
             ElevatedButton.icon(
               onPressed: calculateCGPA,
               icon: Icon(Icons.calculate, color: Colors.white),
-              label: Text("Calculate CGPA", style: GoogleFonts.karla(fontSize: 18, color: Colors.white)),
+              label: Text("Calculate CGPA", style: GoogleFonts.fredoka(fontSize: 18, color: Colors.white)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
+                backgroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(color: Colors.white, width: 2),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -137,12 +149,12 @@ class _CgpaCalculatorState extends State<CgpaCalculator> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.yellow.shade100,
-                  border: Border.all(color: Colors.orange.shade300, width: 2),
+                  color: Color(0xFF1E1E1E),
+                  border: Border.all(color: Colors.white, width: 2),
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.orange.withOpacity(0.2),
+                      color: Colors.white.withOpacity(0.1),
                       blurRadius: 10,
                       offset: Offset(0, 4),
                     ),
@@ -154,7 +166,7 @@ class _CgpaCalculatorState extends State<CgpaCalculator> {
                   style: GoogleFonts.fredoka(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange.shade800,
+                    color: Colors.white,
                   ),
                 ),
               ),

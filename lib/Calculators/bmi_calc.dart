@@ -84,21 +84,28 @@ class _AdvancedBMICalculatorState extends State<AdvancedBMICalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F3F9),
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: const Color(0xFF8C52FF),
-        title: Text("Advanced BMI Calculator",
-            style: GoogleFonts.mochiyPopOne(color: Colors.white, fontSize: 20)),
+        backgroundColor: Colors.black,
+        title: Text(
+          "Advanced BMI Calculator",
+          style: GoogleFonts.mochiyPopOne(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
+        elevation: 4,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             _buildInputCard(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             _buildResultCard(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             _buildHistoryCard(),
           ],
         ),
@@ -108,33 +115,85 @@ class _AdvancedBMICalculatorState extends State<AdvancedBMICalculator> {
 
   Widget _buildInputCard() {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       elevation: 8,
       color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey[200]!],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[300]!,
+              blurRadius: 12,
+              offset: const Offset(4, 4),
+            ),
+            BoxShadow(
+              color: Colors.white,
+              blurRadius: 12,
+              offset: const Offset(-4, -4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            _buildSlider("Height", "${height.toInt()} cm", height, 100, 250,
-                (value) => setState(() => height = value)),
-            _buildSlider("Weight", "${weight.toInt()} kg", weight, 30, 200,
-                (value) => setState(() => weight = value)),
-            _buildSlider("Age", "$age", age.toDouble(), 10, 100,
-                (value) => setState(() => age = value.toInt())),
-            const SizedBox(height: 10),
+            _buildSlider(
+              "Height",
+              "${height.toInt()} cm",
+              height,
+              100,
+              250,
+              (value) => setState(() => height = value),
+            ),
+            _buildSlider(
+              "Weight",
+              "${weight.toInt()} kg",
+              weight,
+              30,
+              200,
+              (value) => setState(() => weight = value),
+            ),
+            _buildSlider(
+              "Age",
+              "$age",
+              age.toDouble(),
+              10,
+              100,
+              (value) => setState(() => age = value.toInt()),
+            ),
+            const SizedBox(height: 16),
             _buildGenderSelector(),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: calculateBMI,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF8C52FF),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            const SizedBox(height: 16),
+            AnimatedScale(
+              scale: 1.0,
+              duration: const Duration(milliseconds: 200),
+              child: ElevatedButton(
+                onPressed: calculateBMI,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  elevation: 6,
+                  shadowColor: Colors.grey[400],
+                ),
+                child: Text(
+                  "Calculate",
+                  style: GoogleFonts.mochiyPopOne(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
               ),
-              child: Text("Calculate",
-                  style: GoogleFonts.mochiyPopOne(color: Colors.white)),
             ),
           ],
         ),
@@ -147,19 +206,28 @@ class _AdvancedBMICalculatorState extends State<AdvancedBMICalculator> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("$label: $value",
-            style:
-                GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600)),
-        Slider(
-          value: currentValue,
-          min: min,
-          max: max,
-          divisions: (max - min).toInt(),
-          label: value,
-          activeColor: const Color(0xFF8C52FF),
-          onChanged: onChanged,
+        Text(
+          "$label: $value",
+          style: GoogleFonts.nunito(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: Colors.black87,
+          ),
         ),
-        const SizedBox(height: 10),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          child: Slider(
+            value: currentValue,
+            min: min,
+            max: max,
+            divisions: (max - min).toInt(),
+            label: value,
+            activeColor: Colors.black,
+            inactiveColor: Colors.grey[400],
+            onChanged: onChanged,
+          ),
+        ),
+        const SizedBox(height: 12),
       ],
     );
   }
@@ -168,22 +236,44 @@ class _AdvancedBMICalculatorState extends State<AdvancedBMICalculator> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ChoiceChip(
-          label: const Text("Male"),
-          selected: gender == "Male",
-          selectedColor: const Color(0xFF8C52FF),
-          onSelected: (selected) {
-            setState(() => gender = "Male");
-          },
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          child: ChoiceChip(
+            label: Text(
+              "Male",
+              style: GoogleFonts.nunito(
+                fontSize: 16,
+                color: gender == "Male" ? Colors.white : Colors.black,
+              ),
+            ),
+            selected: gender == "Male",
+            selectedColor: Colors.black,
+            backgroundColor: Colors.grey[200],
+            onSelected: (selected) {
+              setState(() => gender = "Male");
+            },
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
         ),
-        const SizedBox(width: 10),
-        ChoiceChip(
-          label: const Text("Female"),
-          selected: gender == "Female",
-          selectedColor: const Color(0xFFEC87C0),
-          onSelected: (selected) {
-            setState(() => gender = "Female");
-          },
+        const SizedBox(width: 12),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          child: ChoiceChip(
+            label: Text(
+              "Female",
+              style: GoogleFonts.nunito(
+                fontSize: 16,
+                color: gender == "Female" ? Colors.white : Colors.black,
+              ),
+            ),
+            selected: gender == "Female",
+            selectedColor: Colors.black,
+            backgroundColor: Colors.grey[200],
+            onSelected: (selected) {
+              setState(() => gender = "Female");
+            },
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
         ),
       ],
     );
@@ -191,95 +281,157 @@ class _AdvancedBMICalculatorState extends State<AdvancedBMICalculator> {
 
   Widget _buildResultCard() {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       elevation: 8,
-      color: const Color(0xFFE7D9F8),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Card(
-  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-  elevation: 8,
-  color: const Color(0xFFE7D9F8),
-  child: Padding(
-    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Text(
-            "Your Results",
-            style: GoogleFonts.mochiyPopOne(
-              fontSize: 20,
-              color: const Color(0xFF4A148C),
-            ),
+      color: Colors.white,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.grey[200]!, Colors.white],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[300]!,
+              blurRadius: 12,
+              offset: const Offset(4, 4),
+            ),
+            BoxShadow(
+              color: Colors.white,
+              blurRadius: 12,
+              offset: const Offset(-4, -4),
+            ),
+          ],
         ),
-        const SizedBox(height: 20),
-        _buildResultRow("BMI", "${bmi.toStringAsFixed(2)}"),
-        _buildResultRow("Category", category),
-        _buildResultRow("BMR", "${bmr.toStringAsFixed(2)} kcal/day"),
-        _buildResultRow("Waist/Height Ratio", "${waistToHeightRatio().toStringAsFixed(2)}"),
-      ],
-    ),
-  ),
-)
-
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                "Your Results",
+                style: GoogleFonts.mochiyPopOne(
+                  fontSize: 22,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildResultRow("BMI", "${bmi.toStringAsFixed(2)}"),
+            _buildResultRow("Category", category),
+            _buildResultRow("BMR", "${bmr.toStringAsFixed(2)} kcal/day"),
+            _buildResultRow(
+                "Waist/Height Ratio", "${waistToHeightRatio().toStringAsFixed(2)}"),
+          ],
+        ),
       ),
     );
   }
-  Widget _buildResultRow(String label, String value) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 6),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-        Text(
-          value,
-          style: GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-      ],
-    ),
-  );
-}
 
+  Widget _buildResultRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.nunito(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
+            ),
+          ),
+          Text(
+            value,
+            style: GoogleFonts.nunito(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[800],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildHistoryCard() {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      elevation: 6,
-      color: const Color(0xFFFDF5FF),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      elevation: 8,
+      color: Colors.white,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey[200]!],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[300]!,
+              blurRadius: 12,
+              offset: const Offset(4, 4),
+            ),
+            BoxShadow(
+              color: Colors.white,
+              blurRadius: 12,
+              offset: const Offset(-4, -4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("History",
-                    style: GoogleFonts.mochiyPopOne(fontSize: 16)),
+                Text(
+                  "History",
+                  style: GoogleFonts.mochiyPopOne(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 TextButton(
                   onPressed: clearBMIHistory,
-                  child: Text("Clear All",
-                      style: GoogleFonts.nunito(
-                          color: Colors.redAccent, fontWeight: FontWeight.w600)),
+                  child: Text(
+                    "Clear All",
+                    style: GoogleFonts.nunito(
+                      color: Colors.redAccent,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ],
             ),
-            const Divider(),
+            const Divider(color: Colors.grey),
             bmiHistory.isEmpty
-                ? Text("No history yet",
-                    style: GoogleFonts.nunito(color: Colors.grey))
+                ? Text(
+                    "No history yet",
+                    style: GoogleFonts.nunito(
+                      color: Colors.grey[600],
+                      fontSize: 16,
+                    ),
+                  )
                 : ListView.builder(
                     shrinkWrap: true,
                     itemCount: bmiHistory.length,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) => ListTile(
-                      title: Text(bmiHistory[index],
-                          style: GoogleFonts.nunito()),
+                      title: Text(
+                        bmiHistory[index],
+                        style: GoogleFonts.nunito(
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
+                      ),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.redAccent),
                         onPressed: () => deleteHistoryItem(index),

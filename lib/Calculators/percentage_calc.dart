@@ -28,8 +28,8 @@ class _PercentageCalculatorState extends State<PercentageCalculator> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text("Enter valid marks!", style: GoogleFonts.karla(color: Colors.white)),
+          backgroundColor: Colors.grey[800],
+          content: Text("Enter valid marks!", style: GoogleFonts.fredoka(color: Colors.white)),
         ),
       );
     }
@@ -42,62 +42,79 @@ class _PercentageCalculatorState extends State<PercentageCalculator> {
     super.dispose();
   }
 
+  InputDecoration buildInputDecoration(String label, IconData icon, Color iconColor) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: GoogleFonts.fredoka(color: Colors.grey[400]),
+      prefixIcon: Icon(icon, color: iconColor),
+      filled: true,
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: BorderSide(color: iconColor, width: 2),
+      ),
+      hintStyle: GoogleFonts.fredoka(color: Colors.grey[500]),
+      contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[50],
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text("📈 Percentage Calculator", style: GoogleFonts.rubik(fontSize: 24, color: Colors.white)),
-        backgroundColor: Colors.teal.shade700,
+        title: Text("📈 Percentage Calculator", style: GoogleFonts.fredoka(fontSize: 24, color: Colors.white)),
+        backgroundColor: Colors.black,
         centerTitle: true,
         elevation: 4,
-        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 500),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [BoxShadow(blurRadius: 6, color: Colors.grey.shade300)],
+                gradient: LinearGradient(
+                  colors: [Colors.white, Colors.grey[300] ?? Colors.blueGrey],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(color: Colors.grey[400]!, blurRadius: 12, offset: Offset(0, 8)),
+                ],
               ),
               child: Column(
                 children: [
                   TextField(
                     controller: obtainedMarksController,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "Obtained Marks",
-                      prefixIcon: Icon(Icons.grade, color: Colors.teal),
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      fillColor: Colors.grey[100],
-                    ),
+                    decoration: buildInputDecoration("Obtained Marks", Icons.grade, Colors.black),
+                    style: GoogleFonts.fredoka(color: Colors.black),
                   ),
                   const SizedBox(height: 20),
                   TextField(
                     controller: totalMarksController,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "Total Marks",
-                      prefixIcon: Icon(Icons.school, color: Colors.deepPurple),
-                      border: OutlineInputBorder(),
-                      filled: true,
-                      fillColor: Colors.grey[100],
-                    ),
+                    decoration: buildInputDecoration("Total Marks", Icons.school, Colors.grey[600]!),
+                    style: GoogleFonts.fredoka(color: Colors.black),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 25),
                   ElevatedButton.icon(
                     onPressed: calculatePercentage,
-                    icon: Icon(Icons.calculate,color: Colors.white,),
-                    label: Text("Calculate", style: GoogleFonts.rubik(fontSize: 18,color: Colors.white)),
+                    icon: Icon(Icons.calculate, color: Colors.white),
+                    label: Text("Calculate", style: GoogleFonts.fredoka(fontSize: 18, color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(107, 0, 32, 150),
+                      backgroundColor: Colors.black,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 30),
+                      elevation: 6,
                     ),
                   ),
                 ],
@@ -105,44 +122,48 @@ class _PercentageCalculatorState extends State<PercentageCalculator> {
             ),
             const SizedBox(height: 30),
             if (showResult)
-              Column(
-                children: [
-                  Text(
-                    "Your Percentage:",
-                    style: GoogleFonts.fredoka(fontSize: 22, color: Colors.teal[900]),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "${percentage.toStringAsFixed(2)}%",
-                    style: GoogleFonts.fredoka(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.deepPurple),
-                  ),
-                  const SizedBox(height: 30),
-                  AspectRatio(
-                    aspectRatio: 1.2,
-                    child: PieChart(
-                      PieChartData(
-                        sections: [
-                          PieChartSectionData(
-                            value: percentage,
-                            title: '${percentage.toStringAsFixed(1)}%',
-                            color: Colors.greenAccent.shade400,
-                            radius: 70,
-                            titleStyle: GoogleFonts.rubik(color: Colors.black, fontWeight: FontWeight.bold),
-                          ),
-                          PieChartSectionData(
-                            value: 100 - percentage,
-                            title: '${(100 - percentage).toStringAsFixed(1)}%',
-                            color: Colors.orangeAccent.shade100,
-                            radius: 70,
-                            titleStyle: GoogleFonts.rubik(color: Colors.black),
-                          ),
-                        ],
-                        sectionsSpace: 5,
-                        centerSpaceRadius: 40,
+              AnimatedOpacity(
+                duration: Duration(milliseconds: 600),
+                opacity: showResult ? 1.0 : 0.0,
+                child: Column(
+                  children: [
+                    Text(
+                      "Your Percentage:",
+                      style: GoogleFonts.fredoka(fontSize: 22, color: Colors.black),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "${percentage.toStringAsFixed(2)}%",
+                      style: GoogleFonts.fredoka(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                    ),
+                    const SizedBox(height: 30),
+                    AspectRatio(
+                      aspectRatio: 1.2,
+                      child: PieChart(
+                        PieChartData(
+                          sections: [
+                            PieChartSectionData(
+                              value: percentage,
+                              title: '${percentage.toStringAsFixed(1)}%',
+                              color: Colors.greenAccent.shade400,
+                              radius: 70,
+                              titleStyle: GoogleFonts.fredoka(color: Colors.black, fontWeight: FontWeight.bold),
+                            ),
+                            PieChartSectionData(
+                              value: 100 - percentage,
+                              title: '${(100 - percentage).toStringAsFixed(1)}%',
+                              color: Colors.orangeAccent.shade100,
+                              radius: 70,
+                              titleStyle: GoogleFonts.fredoka(color: Colors.black),
+                            ),
+                          ],
+                          sectionsSpace: 5,
+                          centerSpaceRadius: 40,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
           ],
         ),

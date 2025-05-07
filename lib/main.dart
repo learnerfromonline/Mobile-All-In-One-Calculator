@@ -1,4 +1,4 @@
-import 'package:calculator/Calculators/calc_home.dart';
+import 'package:calculator/splash.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:CartoonCalculatorHome(),
+      home:SplashScreen(),
     );
   }
 }

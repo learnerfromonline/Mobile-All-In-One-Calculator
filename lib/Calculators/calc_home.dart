@@ -1,13 +1,4 @@
-// import 'package:dashboard_desk/screen/Calculators/bmi_calc.dart';
-// import 'package:dashboard_desk/screen/Calculators/cgpa_calc.dart';
-// import 'package:dashboard_desk/screen/Calculators/compound_intrest_calc.dart';
-// import 'package:dashboard_desk/screen/Calculators/dateDiff_calc.dart';
-// import 'package:dashboard_desk/screen/Calculators/distance_calc.dart';
-// import 'package:dashboard_desk/screen/Calculators/normal_calc.dart';
-// import 'package:dashboard_desk/screen/Calculators/percentage_calc.dart';
-// import 'package:dashboard_desk/screen/Calculators/salary_calc.dart';
-// import 'package:dashboard_desk/screen/Calculators/sgpa_calc.dart';
-// import 'package:dashboard_desk/screen/Calculators/simple_intrest_calc.dart';
+
 import 'package:calculator/Calculators/bmi_calc.dart';
 import 'package:calculator/Calculators/cgpa_calc.dart';
 import 'package:calculator/Calculators/compound_intrest_calc.dart';
@@ -19,6 +10,7 @@ import 'package:calculator/Calculators/salary_calc.dart';
 import 'package:calculator/Calculators/sgpa_calc.dart';
 import 'package:calculator/Calculators/simple_intrest_calc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
@@ -102,25 +94,28 @@ class CalculatorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Card(
-        
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        elevation: 15,
-        color: const Color.fromARGB(218, 17, 16, 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 50, color: Colors.white),
-            SizedBox(height: 10),
-            Text(
-              name,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.fredoka(fontSize: 18, color: Colors.white),
-            ),
-          ],
-        ),
+      child: Animate(
+        effects: [FadeEffect(duration: Duration(milliseconds: 500)),FlipEffect()],
+        child: Card(
+          
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 15,
+          color: const Color.fromARGB(218, 17, 16, 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 50, color: Colors.white),
+              SizedBox(height: 10),
+              Text(
+                name,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.fredoka(fontSize: 18, color: Colors.white),
+              ),
+            ],
+          ),
+        ).animate(effects: [FadeEffect(duration: Duration(milliseconds: 900)),FadeEffect(duration: Duration(milliseconds: 500)),]),
       ),
     );
   }

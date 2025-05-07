@@ -21,7 +21,7 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
       double? gpa = double.tryParse(gpaControllers[i].text);
       int? credits = int.tryParse(creditControllers[i].text);
 
-      if (gpa != null && credits != null && gpa >= 0.0 && gpa <= 10.0 && credits > 0) {
+      if (gpa != null && credits != null && gpa >= 0.0 && gpa <= 15.0 && credits > 0) {
         totalWeightedGPA += gpa * credits;
         totalCredits += credits;
       }
@@ -37,7 +37,14 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
         showResult = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter valid GPA (0-10) and credit values!")),
+        SnackBar(
+          backgroundColor: Colors.grey[900],
+          content: Text(
+            "Please enter valid GPA (0-15) and credit values!",
+            textAlign: TextAlign.center,
+            style: GoogleFonts.fredoka(color: Colors.white),
+          ),
+        ),
       );
     }
   }
@@ -68,15 +75,16 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue[50],
+      backgroundColor: Color(0xFF121212), // Black background
       appBar: AppBar(
         title: Text(
           "🎓 SGPA Calculator",
-          style: GoogleFonts.kanit(fontSize: 24, color: Colors.white),
+          style: GoogleFonts.fredoka(color: Colors.white, fontSize: 24),
         ),
-        backgroundColor: Colors.indigo.shade700,
+        backgroundColor: Color(0xFF121212),
         centerTitle: true,
-        elevation: 8,
+        elevation: 6,
+        iconTheme: IconThemeData(color: Colors.transparent),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -84,12 +92,16 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
           children: [
             TextField(
               keyboardType: TextInputType.number,
+              style: TextStyle(color: Colors.white), // Fix: user text visible
               decoration: InputDecoration(
                 labelText: "Number of Subjects",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                labelStyle: GoogleFonts.fredoka(color: Colors.white),
                 filled: true,
-                fillColor: Colors.white,
-                prefixIcon: Icon(Icons.library_books_rounded, color: Colors.indigo),
+                fillColor: Color(0xFF1E1E1E),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                prefixIcon: Icon(Icons.library_books_rounded, color: Colors.white),
+                hintText: 'e.g., 6',
+                hintStyle: GoogleFonts.fredoka(color: Colors.grey[500]),
               ),
               onChanged: setSubjectCount,
             ),
@@ -102,7 +114,7 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
                     elevation: 4,
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                    color: Colors.green.shade50,
+                    color: Color(0xFF1E1E1E),
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Row(
@@ -111,13 +123,16 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
                             child: TextField(
                               controller: creditControllers[index],
                               keyboardType: TextInputType.number,
+                              style: TextStyle(color: Colors.white), // Fix: user text visible
                               decoration: InputDecoration(
                                 labelText: "Credits (Sub ${index + 1})",
-                                labelStyle: GoogleFonts.rubik(),
+                                labelStyle: GoogleFonts.fredoka(color: Colors.white),
                                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                                 filled: true,
-                                fillColor: Colors.white,
-                                prefixIcon: Icon(Icons.bookmark, color: Colors.teal),
+                                fillColor: Color(0xFF2C2C2C),
+                                prefixIcon: Icon(Icons.bookmark, color: Colors.white),
+                                hintText: 'e.g., 4',
+                                hintStyle: GoogleFonts.fredoka(color: Colors.grey[500]),
                               ),
                             ),
                           ),
@@ -126,13 +141,16 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
                             child: TextField(
                               controller: gpaControllers[index],
                               keyboardType: TextInputType.number,
+                              style: TextStyle(color: Colors.white), // Fix: user text visible
                               decoration: InputDecoration(
                                 labelText: "GPA (Sub ${index + 1})",
-                                labelStyle: GoogleFonts.rubik(),
+                                labelStyle: GoogleFonts.fredoka(color: Colors.white),
                                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                                 filled: true,
-                                fillColor: Colors.white,
-                                prefixIcon: Icon(Icons.grade, color: Colors.amber[800]),
+                                fillColor: Color(0xFF2C2C2C),
+                                prefixIcon: Icon(Icons.grade, color: Colors.white),
+                                hintText: 'e.g., 8.5',
+                                hintStyle: GoogleFonts.fredoka(color: Colors.grey[500]),
                               ),
                             ),
                           ),
@@ -148,11 +166,14 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
               onPressed: calculateSGPA,
               icon: Icon(Icons.calculate, color: Colors.white),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.indigo.shade600,
+                backgroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(color: Colors.white, width: 2),
+                ),
               ),
-              label: Text("Calculate SGPA", style: GoogleFonts.karla(fontSize: 18, color: Colors.white)),
+              label: Text("Calculate SGPA", style: GoogleFonts.fredoka(fontSize: 18, color: Colors.white)),
             ),
             const SizedBox(height: 20),
             if (showResult)
@@ -161,12 +182,12 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
                 curve: Curves.easeInOut,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.indigo[50],
+                  color: Color(0xFF1E1E1E),
                   borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.indigo, width: 2),
+                  border: Border.all(color: Colors.white, width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.indigo.withOpacity(0.2),
+                      color: Colors.white.withOpacity(0.1),
                       blurRadius: 12,
                       offset: Offset(0, 4),
                     )
@@ -174,7 +195,7 @@ class _SgpaCalculatorState extends State<SgpaCalculator> {
                 ),
                 child: Text(
                   "Your SGPA: ${sgpa.toStringAsFixed(2)}",
-                  style: GoogleFonts.kanit(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.indigo[900]),
+                  style: GoogleFonts.fredoka(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
